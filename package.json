@@ -1,0 +1,31 @@
+{
+  "name": "vp",
+  "version": "1.0.0",
+  "description": "Veebiprogrammeerimise tundides tehtud veeb",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://S1lv3rrrr@github.com/S1lv3rrrr/VP.git"
+  },
+  "keywords": [
+    "Node.Js",
+    "veeb",
+    "Tallinna",
+    "Ülikool",
+    "DTI",
+    "üliõpilane",
+    "koolitöö"
+  ],
+  "author": "Silver Juks",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/S1lv3rrrr/VP/issues"
+  },
+  "homepage": "https://github.com/S1lv3rrrr/VP#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
