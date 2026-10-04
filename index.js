@@ -38,17 +38,40 @@ app.get('/regvisit', (req, res)=>{
 	res.render('regvisit');
 });
 
+app.get('/terraria', (req, res)=>{
+	res.render('terraria');
+});
+
 app.post('/regvisit', async (req, res)=>{
 	console.log(req.body);
 	try {
+		
+		const dateNow = dateTimeET.dateFormattedET(0);
+		const timeNow = dateTimeET.timeFormattedET();
+
 		await fs.open(regTextRef, 'a');
-		await fs.appendFile(regTextRef, req.body.nameInput + ';');
+		await fs.appendFile(regTextRef, req.body.nameInput + ';' + dateNow + ',' +  timeNow +';');
 		res.render('regvisit');
 	}
 	catch (err){
 		console.log(err);
 		res.render('regvisit');
 	}
+});
+
+app.get('/lastvisit', async (req, res)=>{
+	try {
+		const lastVisit = await fs.readFile(regTextRef, "utf8");
+		let displayVisit = lastVisit.split(";");
+		res.render('lastvisit', {
+			visit:
+				displayVisit[displayVisit.length - 2].split(",")
+		});
+	}
+	catch (err) {
+		res.render('lastvisit', {wisdom: 'Ei ole külastusi!'});
+	}
+
 });
 
 app.listen(5015);
