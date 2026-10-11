@@ -126,7 +126,10 @@ app.get('/eestifilm/inimesed_add', (req,res)=>{
 app.post('/eestifilm/inimesed_add', async (req,res)=>{
 	console.log(req.body);
 	//kontrollime andmete olemasolu
-	if(!req.body.firstNameInput || !req.body.lastNameInput || req.body.bornInput >= new Date()){
+	const now = new Date(); //fikseerib praeguse hetke
+	const bornDate = new Date(req.body.bornInput); //teeb sisestatud kuupäevast (tekst, mis peaks olema standardsel kasutataval kuupäeva kujul) ajaobjekti
+	//if(!req.body.firstNameInput || !req.body.lastNameInput || req.body.bornInput >= new Date()){
+	if(isNaN(bornDate.getTime()) || bornDate > now){
 		console.log('Andmed pole korrektsed');
 		return res.render('eestifilmiinimesed_add', {notice: 'Andmed on puudulikud!'});
 	}
@@ -160,6 +163,14 @@ app.post('/eestifilm/inimesed_add', async (req,res)=>{
 			await conn.end();
 		}
 	}
+});
+
+app.get('/eestifilm/eestifilmid', (req,res)=>{
+	res.render('eestifilmid');
+});
+
+app.get('/eestifilm/eestifilmiametid', (req,res)=>{
+	res.render('eestifilmiametid');
 });
 
 app.listen(5015);

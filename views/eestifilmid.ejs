@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+	<meta charset="utf-8">
+	<title>Silver, veevbiprogrammeerimine</title>
+</head>
+<body>
+<img src="pic/veebiprogrammeerimine_2026_TA.png" alt="">	<h1>Silver, veebiprogrammeerimine</h1>
+	 <p>Eesti filmid</p>
+	<p>Siin lehel on näha Eesti filme. </p>
+	<hr>
+	<ul>
+		<li><a href="/">Avalehele<a/></li>
+		<li><a href="/eestifilm">Eesti filmi avaleht</a></li>
+	</ul>
+	<hr>
+	<ol>
+		<% movieList.forEach(function(movie){%>
+		<li><%= movie.title %>, ilmunud aastal <%=movie.release_year %> ning kestab <%=movie.duration_minutes %></li>
+		<% }); %>
+	</ol>
+</body>
+</html>
