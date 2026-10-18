@@ -158,11 +158,137 @@ const ametid = async (req, res) => {
 	}
 };
 
+//abifunktsioon rippmenüüde andmete lugemiseks
+const loadRelationLists = async (conn) => {
+	const [persons] = await conn.execute('SELECT id, first_name, last_name FROM person ORDER BY last_name');
+	const [movies] = await conn.execute('SELECT id, title FROM movie ORDER BY title');
+	const [professions] = await conn.execute('SELECT id, title FROM profession ORDER BY title');
+	return { persons, movies, professions };
+};
+
+//@desc page for adding relations
+//@route GET /eestifilm/seosed_add
+//@access public
+const seosedAdd = async (req, res) => {
+	let conn;
+	try {
+		conn = await mysql.createConnection({
+			host: process.env.DB_HOST,
+			user: process.env.DB_USER,
+			password: process.env.DB_PASS,
+			database: process.env.DB_NAME
+		});
+		const lists = await loadRelationLists(conn);
+		res.render('eestifilmiseosed_add', { ...lists, notice: 'Ootan sisestust!' });
+	}
+	catch (err) {
+		console.log('Viga andmebaasist lugemisel: ' + err);
+		res.render('eestifilmiseosed_add', { persons: [], movies: [], professions: [], notice: 'Tekkis viga!' });
+	}
+	finally {
+		if (conn) { await conn.end(); }
+	}
+};
+
+//@desc saving a relation
+//@route POST /eestifilm/seosed_add
+//@access public
+const seosedAddPost = async (req, res) => {
+	let conn;
+	let notice = '';
+	try {
+		conn = await mysql.createConnection({
+			host: process.env.DB_HOST,
+			user: process.env.DB_USER,
+			password: process.env.DB_PASS,
+			database: process.env.DB_NAME
+		});
+		const personId = req.body.personInput;
+		const movieId = req.body.movieInput;
+		const professionId = req.body.professionInput;
+
+		if (!personId || !movieId || !professionId) {
+			notice = 'Vali kõik rippmenüüd!';
+		} else {
+			//kas valitud amet on näitleja?
+			const [profRows] = await conn.execute('SELECT title FROM profession WHERE id = ?', [professionId]);
+			const isActor = profRows.length > 0 && profRows[0].title.toLowerCase() === 'näitleja';
+
+			let role = null;
+			if (isActor) {
+				role = req.body.roleInput ? req.body.roleInput.trim() : '';
+				if (role === '') {
+					notice = 'Näitleja puhul tuleb sisestada tegelaskuju nimi!';
+				}
+			}
+
+			if (notice === '') {
+				//kontrollime, kas täpselt sama seos on juba olemas (<=> töötab ka NULL-iga)
+				const [existing] = await conn.execute(
+					'SELECT id FROM person_in_movie WHERE person_id = ? AND movie_id = ? AND profession_id = ? AND role <=> ?',
+					[personId, movieId, professionId, role]
+				);
+				if (existing.length > 0) {
+					notice = 'Selline seos on juba olemas, ei salvestatud!';
+				} else {
+					await conn.execute(
+						'INSERT INTO person_in_movie (person_id, movie_id, profession_id, role) VALUES (?,?,?,?)',
+						[personId, movieId, professionId, role]
+					);
+					notice = 'Seos salvestati, ootan uut sisestust!';
+				}
+			}
+		}
+		const lists = await loadRelationLists(conn);
+		res.render('eestifilmiseosed_add', { ...lists, notice });
+	}
+	catch (err) {
+		console.log('Viga andmebaasiga suhtlemisel: ' + err);
+		res.render('eestifilmiseosed_add', { persons: [], movies: [], professions: [], notice: 'Tekkis viga, andmeid ei salvestatud!' });
+	}
+	finally {
+		if (conn) { await conn.end(); }
+	}
+};
+
+//@desc list of relations
+//@route GET /eestifilm/seosed
+//@access public
+const seosed = async (req, res) => {
+	let conn;
+	try {
+		conn = await mysql.createConnection({
+			host: process.env.DB_HOST,
+			user: process.env.DB_USER,
+			password: process.env.DB_PASS,
+			database: process.env.DB_NAME
+		});
+		const sqlReq = `SELECT p.first_name, p.last_name, m.title AS movie_title, pr.title AS profession_title, pim.role
+			FROM person_in_movie pim
+			JOIN person p ON pim.person_id = p.id
+			JOIN movie m ON pim.movie_id = m.id
+			JOIN profession pr ON pim.profession_id = pr.id
+			ORDER BY m.title, p.last_name`;
+		const [sqlRes] = await conn.execute(sqlReq);
+		res.render('eestifilmiseosed', { relationList: sqlRes });
+	}
+	catch (err) {
+		console.log('Viga andmebaasist lugemisel: ' + err);
+		res.render('eestifilmiseosed', { relationList: [] });
+	}
+	finally {
+		if (conn) { await conn.end(); }
+	}
+};
+
 module.exports = {
 	eestifilm,
 	inimesed,
 	inimesedAdd,
 	inimesedAddPost,
 	filmid,
-	ametid
+	ametid,
+	seosedAdd,
+	seosedAddPost,
+	seosed
 }

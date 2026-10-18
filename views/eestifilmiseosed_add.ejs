@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+	<meta charset="utf-8">
+	<title>Silver, veebiprogrammeerimine</title>
+</head>
+<body>
+	<h1>Silver, veebiprogrammeerimine</h1>
+	<p>Eesti filmi seoste lisamine</p>
+	<hr>
+	<ul>
+		<li><a href="/">Avalehele</a></li>
+		<li><a href="/eestifilm">Eesti filmi avaleht</a></li>
+		<li><a href="/eestifilm/seosed">Seosed</a></li>
+	</ul>
+	<hr>
+	<form method="POST">
+		<label for="personInput">Isik</label>
+		<select id="personInput" name="personInput" required>
+			<option selected disabled value="">Vali isik ...</option>
+			<% persons.forEach(function(p){ %>
+				<option value="<%= p.id %>"><%= p.first_name %> <%= p.last_name %></option>
+			<% }); %>
+		</select>
+		<br>
+		<label for="movieInput">Film</label>
+		<select id="movieInput" name="movieInput" required>
+			<option selected disabled value="">Vali film ...</option>
+			<% movies.forEach(function(m){ %>
+				<option value="<%= m.id %>"><%= m.title %></option>
+			<% }); %>
+		</select>
+		<br>
+		<label for="professionInput">Amet</label>
+		<select id="professionInput" name="professionInput" required>
+			<option selected disabled value="">Vali amet ...</option>
+			<% professions.forEach(function(pr){ %>
+				<option value="<%= pr.id %>" data-title="<%= pr.title.toLowerCase() %>"><%= pr.title %></option>
+			<% }); %>
+		</select>
+		<br>
+		<div id="roleBlock" style="display:none;">
+			<label for="roleInput">Tegelaskuju nimi</label>
+			<input id="roleInput" name="roleInput" type="text" placeholder="Tegelaskuju ...">
+		</div>
+		<input type="submit" value="Salvesta">
+	</form>
+	<p><%= notice %></p>
+
+	<script>
+		const profSelect = document.getElementById('professionInput');
+		const roleBlock = document.getElementById('roleBlock');
+		profSelect.addEventListener('change', function(){
+			const title = profSelect.options[profSelect.selectedIndex].dataset.title;
+			roleBlock.style.display = (title === 'näitleja') ? 'block' : 'none';
+		});
+	</script>
+</body>
+</html>

@@ -8,7 +8,10 @@ const{
 	inimesedAdd,
 	inimesedAddPost,
 	filmid,
-	ametid} = require('../controllers/eestifilmControllers');
+	ametid,
+	seosedAdd,
+	seosedAddPost,
+	seosed} = require('../controllers/eestifilmControllers');
 
 
 router.route('/').get(eestifilm);
@@ -22,5 +25,11 @@ router.route('/inimesed_add').post(inimesedAddPost);
 router.route('/eestifilmid').get(filmid);
 
 router.route('/eestifilmiametid').get(ametid);
+
+router.route('/seosed_add').get(seosedAdd);
+
+router.route('/seosed_add').post(seosedAddPost);
+
+router.route('/seosed').get(seosed);
 
 module.exports = router;
