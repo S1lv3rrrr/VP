@@ -1,5 +1,8 @@
 const mysql = require('mysql2/promise')
+const fs = require('fs').promises;
+const path = require('path');
 const dateTimeET = require('../src/dateTimeET');
+const regTextRef = path.join(__dirname, '../public/txt/visitlog.txt');
 //@desc home page for visitor logging
 //@route GET /regvisit
 //@access public
@@ -21,8 +24,7 @@ const regvisitPost = async (req, res) => {
 		const dateNow = dateTimeET.fullDate(0);
 		const timeNow = dateTimeET.fullTime();
 
-		await fs.open(regTextRef, 'a');
-		await fs.appendFile(regTextRef, req.body.nameInput + ';' + dateNow + ',' +  timeNow +';');
+		await fs.appendFile(regTextRef, req.body.nameInput + ',' + dateNow + ',' +  timeNow +';');
 		res.render('regvisit');
 	}
 	catch (err){
@@ -46,7 +48,8 @@ const lastvisit = async (req, res) => {
 		});
 	}
 	catch (err) {
-		res.render('lastvisit', {wisdom: 'Ei ole külastusi!'});
+		console.log(err);
+		res.render('lastvisit', {visit: null, wisdom: 'Ei ole külastusi!'});
 	}
 
 };

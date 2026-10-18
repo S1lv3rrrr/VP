@@ -16,7 +16,7 @@ const inimesed = async (req, res) => {
 	console.log('Andmebaasiserver on: ' + process.env.DB_HOST);
 	let conn;
 	try {
-		const conn = await mysql.createConnection ({
+			conn = await mysql.createConnection ({
 			host: process.env.DB_HOST,
 			user: process.env.DB_USER,
 			password: process.env.DB_PASS,
@@ -65,7 +65,7 @@ const inimesedAddPost = async (req, res) => {
 	}
 	let conn;
 	try {
-		conn = await mysql.createConnection ({
+			conn = await mysql.createConnection ({
 			host: process.env.DB_HOST,
 			user: process.env.DB_USER,
 			password: process.env.DB_PASS,
@@ -104,7 +104,7 @@ const filmid = async (req, res) => {
 	console.log('Andmebaasiserver on: ' + process.env.DB_HOST);
 	let conn;
 	try {
-		const conn = await mysql.createConnection ({
+			conn = await mysql.createConnection ({
 			host: process.env.DB_HOST,
 			user: process.env.DB_USER,
 			password: process.env.DB_PASS,
@@ -136,7 +136,7 @@ const ametid = async (req, res) => {
 	console.log('Andmebaasiserver on: ' + process.env.DB_HOST);
 	let conn;
 	try {
-		const conn = await mysql.createConnection ({
+			conn = await mysql.createConnection ({
 			host: process.env.DB_HOST,
 			user: process.env.DB_USER,
 			password: process.env.DB_PASS,

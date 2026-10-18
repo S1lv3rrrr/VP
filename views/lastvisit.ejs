@@ -7,11 +7,15 @@
 <body>
 <img src="../pic/veebiprogrammeerimine_2026_TA.png" alt="">	
 	<h1>Viimane külastus</h1>
+	<% if (visit) { %>
 	<p>
         Viimati registreeriti külastus <%= visit[1] %>,
         kell <%= visit[2] %>
         kui seda tegi <%= visit[0] %>.
     </p>
+	<% } else { %>
+		<p><%= wisdom %></p>
+	<% } %>
 	<ul>
 		<li><a href="/">Avaleht</a></li>
 		<li><a href="/regvisit">Registreeri uus külastus</a></li>

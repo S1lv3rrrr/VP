@@ -17,7 +17,7 @@ router.route('/inimesed').get(inimesed);
 
 router.route('/inimesed_add').get(inimesedAdd);
 
-router.route('/inimesed_add').get(inimesedAddPost);
+router.route('/inimesed_add').post(inimesedAddPost);
 
 router.route('/eestifilmid').get(filmid);
 
