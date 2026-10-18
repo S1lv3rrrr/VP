@@ -5,7 +5,7 @@
 	<title>Silver, veevbiprogrammeerimine</title>
 </head>
 <body>
-<img src="pic/veebiprogrammeerimine_2026_TA.png" alt="">	<h1>Silver, veebiprogrammeerimine</h1>
+<img src="../pic/veebiprogrammeerimine_2026_TA.png" alt="">	<h1>Silver, veebiprogrammeerimine</h1>
 	 <p>Eesti filmid</p>
 	<p>Siin lehel on näha Eesti filme. </p>
 	<hr>
@@ -16,7 +16,7 @@
 	<hr>
 	<ol>
 		<% movieList.forEach(function(movie){%>
-		<li><%= movie.title %>, ilmunud aastal <%=movie.release_year %> ning kestab <%=movie.duration_minutes %></li>
+		<li><%= movie.title %>, ilmunud aastal <%=movie.release_year %> ning kestab <%=movie.duration_minutes %> minutit.</li>
 		<% }); %>
 	</ol>
 </body>
