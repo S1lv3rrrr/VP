@@ -18,7 +18,7 @@ const app = express();
 app.set('view engine', 'ejs');
 //määran ühe päis kataloogi virtuaalses serveris kättesaadavaks
 app.use(express.static('public'));
-app.use(bodyparser.urlencoded({extended: false}));
+app.use(bodyparser.urlencoded({extended: true}));
 
 //loon andmebaasiühenduse
 /*const conn = mysql.createConnection ({
@@ -59,5 +59,9 @@ app.use('/regvisit', visitRouter);
 //Eesti filmi marsruudid
 const eestifilmRouter = require('./routes/eestifilmRoutes');
 app.use('/eestifilm', eestifilmRouter);
+
+//Galeriipiltide üleslaadimine
+const galleryPhotoUploadRouter = require('./routes/galleryPhotoUploadRoutes');
+app.use('/galleryPhotoUpload', galleryPhotoUploadRouter);
 
 app.listen(5015);
