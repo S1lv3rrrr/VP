@@ -64,4 +64,7 @@ app.use('/eestifilm', eestifilmRouter);
 const galleryPhotoUploadRouter = require('./routes/galleryPhotoUploadRoutes');
 app.use('/galleryPhotoUpload', galleryPhotoUploadRouter);
 
+const galleryPhotosRouter = require('./routes/galleryPhotoRoutes')
+app.use('/galleryPhotos', galleryPhotosRouter);
+
 app.listen(5015);

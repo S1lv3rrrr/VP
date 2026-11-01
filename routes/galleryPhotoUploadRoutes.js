@@ -4,7 +4,7 @@ const router = express.Router();
 
 //Seadistame multer vahevara (middleware) failide üleslaadimiseks
 //Määran üleslaadimise kataloogi
-const upload = multer({dest: './public/gallery/orig/'});
+const upload = multer({dest: process.env.UPLOAD_ORIGINAL_PATH});
 //Määrata saab veel näiteks lubatud failitüüpe, faili suuruse piirangut jne
 
 //kontrollerid

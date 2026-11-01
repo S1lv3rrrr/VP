@@ -22,11 +22,17 @@ const galleryPhotoUploadPost = async (req, res) => {
 		//genereerime oma failinime
 		const fileName = 'vp_' + Date.now() + '.jpg';
 		await fs.rename(req.file.path, req.file.destination + fileName);
-		//Pildi suuruse muutmine (max 800x600)
-		await sharp(req.file.destination + fileName).resize(800, 600).jpeg({quality: 90}).toFile('./public/gallery/normal/' + fileName);
-		//Teeme pisipildi (100x100)
-		await sharp(req.file.destination + fileName).resize(100, 100).jpeg({quality: 90}).toFile('./public/gallery/thumbs/' + fileName);
-		let sqlReq = 'INSERT INTO galleryphotos (filename, origname, alttext, privacy, userid) VALUES (?,?,?,?,?)';
+		//Pildi suuruse muutmine (max 800x600) ja vesimärgi lisamine
+		await sharp(req.file.destination + fileName).resize(800, 600).jpeg({quality: 90}).composite([{
+			input: './public/pic/watermark.png',
+			gravity: 'southeast'
+		}]).toFile(process.env.UPLOAD_RESIZED_PATH + fileName);
+		// teeme pisipildi (100 x 100)
+		await sharp(req.file.destination + fileName).resize(100, 100).jpeg({quality: 15}).composite([{
+			input: './public/pic/watermark.png',
+			gravity: 'southeast'
+		}]).toFile(process.env.UPLOAD_THUMBNAIL_PATH + fileName);
+		let sqlReq = 'INSERT INTO galleryphotos (filename, origname, alttext, privacy, userid) VALUES (?, ?, ?, ?, ?)';
 		const userId = 1; //See on ajutine, kuni päris kasutajakontod teeme
 		conn = await mysql.createConnection({
 			host: process.env.DB_HOST,
