@@ -28,10 +28,17 @@ const galleryPhotoUploadPost = async (req, res) => {
 			gravity: 'southeast'
 		}]).toFile(process.env.UPLOAD_RESIZED_PATH + fileName);
 		// teeme pisipildi (100 x 100)
-		await sharp(req.file.destination + fileName).resize(100, 100).jpeg({quality: 15}).composite([{
-			input: './public/pic/watermark.png',
-			gravity: 'southeast'
-		}]).toFile(process.env.UPLOAD_THUMBNAIL_PATH + fileName);
+		const smallWatermark = await sharp('./public/pic/watermark.png')
+			.resize(40)   // laius 40 px, kõrgus säilitab proportsiooni
+			.toBuffer();
+		await sharp(req.file.destination + fileName)
+			.resize(100, 100)
+			.jpeg({quality: 15})
+			.composite([{
+				input: smallWatermark,
+				gravity: 'southeast'
+			}])
+		.toFile(process.env.UPLOAD_THUMBNAIL_PATH + fileName);
 		let sqlReq = 'INSERT INTO galleryphotos (filename, origname, alttext, privacy, userid) VALUES (?, ?, ?, ?, ?)';
 		const userId = 1; //See on ajutine, kuni päris kasutajakontod teeme
 		conn = await mysql.createConnection({
