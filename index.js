@@ -37,6 +37,16 @@ app.get('/', (req, res)=>{
 	res.render('index', {dayNow: dayNow, dateNow: dateNow, timeNow: timeNow});
 });
 
+//Sisseloginud kasutajate avaleht
+app.get('/home', (req, res)=>{
+	res.render('home');
+});
+
+//Väljalogimine
+app.get('/logOut', (req, res)=>{
+	res.redirect('/');
+});
+
 app.get('/vanasona', async (req, res)=>{
 	try {
 		const data = await fs.readFile(textRef, 'utf8');
@@ -66,5 +76,13 @@ app.use('/galleryPhotoUpload', galleryPhotoUploadRouter);
 
 const galleryPhotosRouter = require('./routes/galleryPhotoRoutes')
 app.use('/galleryPhotos', galleryPhotosRouter);
+
+//Kasutajakonto loomise marsruut
+const signUpRouter = require('./routes/signUpRoutes')
+app.use('/signUp', signUpRouter);
+
+//Sisselogimise marsruut
+const signInRouter = require('./routes/signInRoutes')
+app.use('/signIn', signInRouter);
 
 app.listen(5015);
